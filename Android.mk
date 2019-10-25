@@ -145,6 +145,14 @@ endif
 LOCAL_SHARED_LIBRARIES += libaudiopolicyservice
 endif
 
+ifeq ($(ANDROID_MAJOR),$(filter $(ANDROID_MAJOR),8 9))
+LOCAL_SHARED_LIBRARIES += android.hardware.camera.provider@2.4
+endif
+
+ifeq ($(shell test $(MAJOR_VERSION) -ge 10 && echo true),true)
+LOCAL_SHARED_LIBRARIES += android.hardware.camera.provider@2.5
+endif
+
 ifeq ($(shell test $(MAJOR_VERSION) -ge 8 && echo true),true)
 LOCAL_C_INCLUDES += frameworks/native/libs/sensor/include \
                     frameworks/av/media/libstagefright/omx/include
@@ -154,8 +162,7 @@ LOCAL_SHARED_LIBRARIES += liblog \
                           libhwbinder \
                           libsensor \
                           android.frameworks.sensorservice@1.0 \
-                          android.hardware.camera.common@1.0 \
-                          android.hardware.camera.provider@2.4
+                          android.hardware.camera.common@1.0
 endif
 
 ifeq ($(shell test $(MAJOR_VERSION) -ge 9 && echo true),true)
@@ -175,6 +182,7 @@ ifeq ($(strip $(DROIDMEDIA_32)), true)
 LOCAL_32_BIT_ONLY := true
 endif
 include $(BUILD_EXECUTABLE)
+
 
 include $(CLEAR_VARS)
 LOCAL_SRC_FILES := minisf.cpp allocator.cpp
@@ -233,7 +241,12 @@ ifneq ($(shell cat frameworks/native/services/surfaceflinger/SurfaceFlinger.h |g
 LOCAL_CPPFLAGS += -DUSE_SERVICES_VENDOR_EXTENSION
 endif
 ifeq ($(ANDROID_MAJOR),$(filter $(ANDROID_MAJOR),8 9))
-LOCAL_SHARED_LIBRARIES += libmediaextractor
+LOCAL_SHARED_LIBRARIES += libmediaextractor \
+                          android.hardware.camera.provider@2.4
+endif
+
+ifeq ($(shell test $(MAJOR_VERSION) -ge 10 && echo true),true)
+LOCAL_SHARED_LIBRARIES += android.hardware.camera.provider@2.5
 endif
 
 ifeq ($(shell test $(MAJOR_VERSION) -ge 8 && echo true),true)
@@ -244,8 +257,7 @@ LOCAL_SHARED_LIBRARIES += liblog \
                           libhwbinder \
                           libsensor \
                           android.frameworks.sensorservice@1.0 \
-                          android.hardware.camera.common@1.0 \
-                          android.hardware.camera.provider@2.4
+                          android.hardware.camera.common@1.0
 endif
 
 ifeq ($(shell test $(MAJOR_VERSION) -ge 9 && echo true),true)
