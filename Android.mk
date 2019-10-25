@@ -150,7 +150,8 @@ LOCAL_SHARED_LIBRARIES += android.hardware.camera.provider@2.4
 endif
 
 ifeq ($(shell test $(MAJOR_VERSION) -ge 10 && echo true),true)
-LOCAL_SHARED_LIBRARIES += android.hardware.camera.provider@2.5
+LOCAL_SHARED_LIBRARIES += android.hardware.camera.provider@2.5 \
+                          android.hardware.camera.device@3.4
 endif
 
 ifeq ($(shell test $(MAJOR_VERSION) -ge 8 && echo true),true)
@@ -246,7 +247,8 @@ LOCAL_SHARED_LIBRARIES += libmediaextractor \
 endif
 
 ifeq ($(shell test $(MAJOR_VERSION) -ge 10 && echo true),true)
-LOCAL_SHARED_LIBRARIES += android.hardware.camera.provider@2.5
+LOCAL_SHARED_LIBRARIES += android.hardware.camera.provider@2.5 \
+                          android.hardware.camera.device@3.4
 endif
 
 ifeq ($(shell test $(MAJOR_VERSION) -ge 8 && echo true),true)
