@@ -64,7 +64,7 @@ LOCAL_SRC_FILES := droidmedia.cpp \
                    droidmediabuffer.cpp \
                    private.cpp
 
-ifeq ($(shell test $(MAJOR_VERSION) -ge 7 && echo true),true)
+ifeq ($(shell test $(ANDROID_MAJOR) -ge 7 && echo true),true)
 LOCAL_SRC_FILES += AsyncDecodingSource.cpp
 endif
 
@@ -80,7 +80,7 @@ LOCAL_SHARED_LIBRARIES := libc \
                           libstagefright_foundation \
                           libmedia
 
-ifeq ($(shell test $(MAJOR_VERSION) -ge 8 && echo true),true)
+ifeq ($(shell test $(ANDROID_MAJOR) -ge 8 && echo true),true)
 LOCAL_SHARED_LIBRARIES += liblog
 endif
 
@@ -88,7 +88,7 @@ ifeq ($(ANDROID_MAJOR),$(filter $(ANDROID_MAJOR),8 9))
 LOCAL_SHARED_LIBRARIES += libmediaextractor
 endif
 
-ifeq ($(shell test $(MAJOR_VERSION) -ge 9 && echo true),true)
+ifeq ($(shell test $(ANDROID_MAJOR) -ge 9 && echo true),true)
 LOCAL_SHARED_LIBRARIES += android.hidl.memory@1.0 \
                           libmedia_omx
 endif
@@ -100,7 +100,7 @@ LOCAL_MODULE := libdroidmedia
 ifeq ($(strip $(ANDROID_MAJOR)),7)
 LOCAL_C_INCLUDES := frameworks/native/include/media/openmax \
                     frameworks/native/include/media/hardware
-else ifeq ($(shell test $(MAJOR_VERSION) -ge 8 && echo true),true)
+else ifeq ($(shell test $(ANDROID_MAJOR) -ge 8 && echo true),true)
 LOCAL_C_INCLUDES := frameworks/native/include/media/openmax \
                     frameworks/native/include/media/hardware \
                     frameworks/native/libs/nativewindow/include \
@@ -149,14 +149,14 @@ ifeq ($(ANDROID_MAJOR),$(filter $(ANDROID_MAJOR),8 9))
 LOCAL_SHARED_LIBRARIES += android.hardware.camera.provider@2.4
 endif
 
-ifeq ($(shell test $(MAJOR_VERSION) -ge 10 && echo true),true)
+ifeq ($(shell test $(ANDROID_MAJOR) -ge 10 && echo true),true)
 LOCAL_SHARED_LIBRARIES += android.hardware.camera.provider@2.5 \
                           android.hardware.camera.device@3.4 \
                           libsensorprivacy
 LOCAL_AIDL_INCLUDES := frameworks/native/libs/sensorprivacy/aidl
 endif
 
-ifeq ($(shell test $(MAJOR_VERSION) -ge 8 && echo true),true)
+ifeq ($(shell test $(ANDROID_MAJOR) -ge 8 && echo true),true)
 LOCAL_C_INCLUDES += frameworks/native/libs/sensor/include \
                     frameworks/av/media/libstagefright/omx/include
 LOCAL_SHARED_LIBRARIES += liblog \
@@ -168,7 +168,7 @@ LOCAL_SHARED_LIBRARIES += liblog \
                           android.hardware.camera.common@1.0
 endif
 
-ifeq ($(shell test $(MAJOR_VERSION) -ge 9 && echo true),true)
+ifeq ($(shell test $(ANDROID_MAJOR) -ge 9 && echo true),true)
 LOCAL_SHARED_LIBRARIES += android.hidl.memory@1.0
 endif
 
@@ -196,7 +196,7 @@ LOCAL_SHARED_LIBRARIES := libutils \
                           libcutils \
                           libui
 
-ifeq ($(shell test $(MAJOR_VERSION) -ge 8 && echo true),true)
+ifeq ($(shell test $(ANDROID_MAJOR) -ge 8 && echo true),true)
 LOCAL_C_INCLUDES := frameworks/native/libs/sensor/include \
                     frameworks/native/include
 LOCAL_SHARED_LIBRARIES += liblog \
@@ -213,7 +213,7 @@ ifeq ($(ANDROID_MAJOR),$(filter $(ANDROID_MAJOR),9))
 LOCAL_SHARED_LIBRARIES += android.hidl.memory@1.0
 endif
 
-ifeq ($(shell test $(MAJOR_VERSION) -ge 10 && echo true),true)
+ifeq ($(shell test $(ANDROID_MAJOR) -ge 10 && echo true),true)
 LOCAL_SHARED_LIBRARIES += libsensorprivacy
 LOCAL_AIDL_INCLUDES := frameworks/native/libs/sensorprivacy/aidl
 endif
@@ -253,14 +253,14 @@ LOCAL_SHARED_LIBRARIES += libmediaextractor \
                           android.hardware.camera.provider@2.4
 endif
 
-ifeq ($(shell test $(MAJOR_VERSION) -ge 10 && echo true),true)
+ifeq ($(shell test $(ANDROID_MAJOR) -ge 10 && echo true),true)
 LOCAL_SHARED_LIBRARIES += android.hardware.camera.provider@2.5 \
                           android.hardware.camera.device@3.4 \
                           libsensorprivacy
 LOCAL_AIDL_INCLUDES := frameworks/native/libs/sensorprivacy/aidl
 endif
 
-ifeq ($(shell test $(MAJOR_VERSION) -ge 8 && echo true),true)
+ifeq ($(shell test $(ANDROID_MAJOR) -ge 8 && echo true),true)
 LOCAL_SHARED_LIBRARIES += liblog \
                           libcamera_client \
                           libhidlbase \
@@ -271,7 +271,7 @@ LOCAL_SHARED_LIBRARIES += liblog \
                           android.hardware.camera.common@1.0
 endif
 
-ifeq ($(shell test $(MAJOR_VERSION) -ge 9 && echo true),true)
+ifeq ($(shell test $(ANDROID_MAJOR) -ge 9 && echo true),true)
 LOCAL_SHARED_LIBRARIES += android.hidl.memory@1.0
 endif
 

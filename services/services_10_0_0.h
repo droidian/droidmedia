@@ -173,6 +173,10 @@ public:
         return 0;
     }
 
+    status_t getLayerDebugInfo(std::vector<LayerDebugInfo>*) {
+        return 0;
+    }
+
     std::vector<PhysicalDisplayId> getPhysicalDisplayIds() const {
         return std::vector<PhysicalDisplayId>();
     }
