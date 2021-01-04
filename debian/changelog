@@ -1,0 +1,97 @@
+droidmedia (0.20200424.0-1+gemian) unstable; urgency=medium
+
+  * Branch for Gemian
+
+ -- Adam Boardman <adamboardman@gmail.com>  Mon, 4 Jan 2021 20:28:00 +0000
+ 
+droidmedia (0.20200424.0-1~ubports16.04.2) xenial; urgency=medium
+
+  * Update Jenkinsfile to the shared library scheme (demo mission).
+
+ -- Ratchanan Srirattanamet <ratchanan@ubports.com>  Wed, 12 Aug 2020 01:46:34 +0700
+
+droidmedia (0.20200424.0-1~ubports16.04.1) xenial; urgency=medium
+
+  * Merge version 0.20200424.0 from Debian-PM
+  * Update source location for 0.20200424.0
+
+ -- Ratchanan Srirattanamet <ratchanan@ubports.com>  Tue, 09 Jun 2020 00:35:51 +0700
+
+droidmedia (0.20200424.0-1) unstable; urgency=medium
+
+  * New upstream release.
+  * Update 0001-Fix-path-for-halium.patch to work with 64-bit systems
+
+ -- Ratchanan Srirattanamet <ratchanan@ubports.com>  Fri, 08 May 2020 02:44:20 +0700
+
+droidmedia (0.20191025.0-1~ubports16.04.3) xenial; urgency=medium
+
+  * Make hybris.c look for the library in the correct path for 64-bit system.
+
+ -- Ratchanan Srirattanamet <ratchanan@ubports.com>  Thu, 06 Feb 2020 14:43:23 +0700
+
+droidmedia (0.20191025.0-1~ubports16.04.2) xenial; urgency=medium
+
+  * Merge version 0.20191025.0-1 from debian-pm.
+  * Update source location for 0.20191025.0.
+  * Note: UBports version bumped to 16.04.2 because 16.04.1 is used in
+    a test branch. Sorry!
+
+ -- Ratchanan Srirattanamet <ratchanan@ubports.com>  Mon, 20 Jan 2020 00:22:08 +0700
+
+droidmedia (0.20191025.0-1) unstable; urgency=medium
+
+  * New upstream release
+
+ -- Jonah Brüchert <jbb@kaidan.im>  Sun, 19 Jan 2020 18:05:16 +0100
+
+droidmedia (0.20190828.0-1) unstable; urgency=medium
+
+  * New upstream release
+
+ -- Jonah Brüchert <jbb@kaidan.im>  Sun, 06 Oct 2019 16:35:56 +0200
+
+droidmedia (0.20190805.0-1~ubports16.04.1) xenial; urgency=medium
+
+  * Import to UBPorts
+  * Backport to xenial
+    - Reduce debhelper compatibility to 9
+
+ -- Ratchanan Srirattanamet <peathot@hotmail.com>  Fri, 23 Aug 2019 22:08:48 +0700
+
+droidmedia (0.20190805.0-1) unstable; urgency=medium
+
+  * New upstream release.
+  * debian/control: do not depends on shlibs:Depends
+
+ -- Ratchanan Srirattanamet <peathot@hotmail.com>  Fri, 23 Aug 2019 00:24:43 +0700
+
+droidmedia (0.20181119.0-1) unstable; urgency=medium
+
+  * New upstream release.
+
+ -- Jonah Brüchert <jbb@kaidan.im>  Wed, 26 Dec 2018 19:16:23 +0100
+
+droidmedia (0.20181017.0-1) unstable; urgency=medium
+
+  * New upstream release.
+
+ -- Jonah Brüchert <jbb@kaidan.im>  Wed, 26 Dec 2018 19:16:20 +0100
+
+droidmedia (0.20180626.0-1) unstable; urgency=medium
+
+  * New upstream release.
+
+ -- Jonah Brüchert <jbb@kaidan.im>  Wed, 27 Jun 2018 20:39:57 +0200
+
+droidmedia (0.20180406.1-1) unstable; urgency=medium
+
+  * New upstream release.
+
+ -- Jonah Brüchert <jbb@kaidan.im>  Thu, 07 Jun 2018 16:34:12 +0200
+
+droidmedia (1.0-1) unstable; urgency=medium
+
+  * Initial release.
+
+ -- Bhushan Shah <bshah@kde.org>  Fri, 15 Dec 2017 07:48:09 +0000
