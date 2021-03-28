@@ -40,6 +40,10 @@
 #endif
 #include "services/services.h"
 
+#if ANDROID_MAJOR >= 10
+extern void FakeSensorServices_instantiate();
+#endif
+
 #include <cutils/properties.h>
 
 #undef LOG_TAG
@@ -77,10 +81,16 @@ main(int, char**)
 #if ANDROID_MAJOR >= 10
     FakeSensorPrivacyManager::instantiate();
 #endif
-#if ! defined(SENSORSERVER_DISABLE) && ANDROID_MAJOR <= 9
+#ifndef SENSORSERVER_DISABLE
+#if ANDROID_MAJOR < 10
     FakeSensorServer::instantiate();
-#endif
-#endif
+#else
+    // start both FakeSensorServer and FakeSensorManager
+    // moved to fakesensorservice.cpp to avoid header conflicts
+    FakeSensorServices_instantiate();
+#endif // if ANDROID_MAJOR < 10
+#endif // ifndef SENSORSERVER_DISABLE
+#endif // if ANDROID_MAJOR >= 5
 #if ANDROID_MAJOR >= 8 && ANDROID_MAJOR <= 9
     sp<android::frameworks::sensorservice::V1_0::ISensorManager> sensorManager = new FakeSensorManager;
     status_t status = sensorManager->registerAsService();

@@ -154,6 +154,7 @@ LOCAL_SHARED_LIBRARIES += android.hardware.camera.provider@2.5 \
                           android.hardware.camera.device@3.4 \
                           libsensorprivacy
 LOCAL_AIDL_INCLUDES := frameworks/native/libs/sensorprivacy/aidl
+LOCAL_SRC_FILES += fakesensorservice.cpp
 endif
 
 ifeq ($(shell test $(ANDROID_MAJOR) -ge 8 && echo true),true)
