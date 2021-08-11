@@ -454,9 +454,28 @@ public:
 #endif
 
       if (!strcmp (mime, android::MEDIA_MIMETYPE_VIDEO_AVC)) {
-        format->setInt32("profile", OMX_VIDEO_AVCProfileBaseline);
-        int32_t level = android::ACodec::getAVCLevelFor(width, height, frames, bitrate);
+        int32_t profile = m_enc->codec_specific.h264.profile;
+        int32_t level = m_enc->codec_specific.h264.level;
+
+        if (!profile) {
+          profile = OMX_VIDEO_AVCProfileBaseline;
+        }
+
+        if (!level) {
+          level = android::ACodec::getAVCLevelFor(width, height, frames, bitrate,
+#if (ANDROID_MAJOR == 8 && ANDROID_MINOR >= 1) || ANDROID_MAJOR >= 9
+                                                  (OMX_VIDEO_AVCPROFILEEXTTYPE)profile);
+#else
+                                                  (OMX_VIDEO_AVCPROFILETYPE)profile);
+#endif
+        }
+
+        format->setInt32("profile", profile);
         format->setInt32("level", level);
+
+        if (m_enc->codec_specific.h264.prepend_header_to_sync_frames) {
+          format->setInt32("prepend-sps-pps-to-idr-frames", 1);
+        }
       }
       //TODO: time-scale
 
