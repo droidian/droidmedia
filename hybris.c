@@ -200,6 +200,7 @@ HYBRIS_WRAPPER_1_2(bool, DroidMediaCamera*,const char *,droid_media_camera_set_p
 HYBRIS_WRAPPER_1_1(char *, DroidMediaCamera*, droid_media_camera_get_parameters)
 HYBRIS_WRAPPER_1_2(bool, DroidMediaCamera*, int, droid_media_camera_take_picture)
 HYBRIS_WRAPPER_1_1(DroidMediaBufferQueue*, DroidMediaCamera*, droid_media_camera_get_buffer_queue)
+HYBRIS_WRAPPER_1_1(DroidMediaBufferQueue*, DroidMediaCamera*, droid_media_camera_get_recording_buffer_queue)
 HYBRIS_WRAPPER_0_1(DroidMediaBuffer*,droid_media_buffer_destroy)
 HYBRIS_WRAPPER_0_3(DroidMediaBuffer*,EGLDisplay,EGLSyncKHR,droid_media_buffer_release)
 HYBRIS_WRAPPER_0_2(DroidMediaCamera*, DroidMediaCameraRecordingData*,droid_media_camera_release_recording_frame)
@@ -209,6 +210,7 @@ HYBRIS_WRAPPER_1_1(void*,DroidMediaCameraRecordingData*,droid_media_camera_recor
 HYBRIS_WRAPPER_1_3(bool,DroidMediaCamera*,DroidMediaCameraFaceDetectionType,bool,droid_media_camera_enable_face_detection)
 HYBRIS_WRAPPER_1_3(DroidMediaBuffer*,uint32_t,uint32_t,uint32_t,droid_media_buffer_create)
 HYBRIS_WRAPPER_1_2(void*,DroidMediaBuffer*,uint32_t,droid_media_buffer_lock)
+HYBRIS_WRAPPER_1_3(bool,DroidMediaBuffer*,uint32_t,DroidMediaBufferYCbCr*,droid_media_buffer_lock_ycbcr)
 HYBRIS_WRAPPER_0_1(DroidMediaBuffer*,droid_media_buffer_unlock)
 HYBRIS_WRAPPER_0_2(DroidMediaBuffer*,void *,droid_media_buffer_set_user_data)
 HYBRIS_WRAPPER_1_1(void*,DroidMediaBuffer*,droid_media_buffer_get_user_data)
@@ -225,6 +227,7 @@ HYBRIS_WRAPPER_1_0(int,droid_media_buffer_queue_length);
 HYBRIS_WRAPPER_1_1(DroidMediaCodec*,DroidMediaCodecDecoderMetaData*,droid_media_codec_create_decoder);
 HYBRIS_WRAPPER_1_1(DroidMediaCodec*,DroidMediaCodecEncoderMetaData*,droid_media_codec_create_encoder);
 HYBRIS_WRAPPER_1_2(bool,DroidMediaCodecMetaData*,bool,droid_media_codec_is_supported);
+HYBRIS_WRAPPER_1_4(unsigned,const char*,int,uint32_t*,unsigned,droid_media_codec_get_supported_color_formats);
 HYBRIS_WRAPPER_1_1(bool,DroidMediaCodec*,droid_media_codec_start);
 HYBRIS_WRAPPER_0_1(DroidMediaCodec*,droid_media_codec_stop);
 HYBRIS_WRAPPER_0_1(DroidMediaCodec *,droid_media_codec_destroy);
