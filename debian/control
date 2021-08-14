@@ -3,7 +3,7 @@ Section: libdevel
 Priority: optional
 Maintainer: Adam Boardman <adamboardman@gmail.com>
 XSBC-Original-Maintainer: Bhushan Shah <bhush94@gmail.com>
-Build-Depends: debhelper (>= 9)
+Build-Depends: debhelper (>= 9), meson
 Standards-Version: 4.2.1
 Homepage: http://github.com/sailfishos/droidmedia
 Vcs-Git: https://gitlab.com/debian-pm/halium/droidmedia.git
@@ -15,3 +15,4 @@ Multi-Arch: foreign
 Depends: ${misc:Depends}
 Description: Android media wrapper library
  Android media wrapper library
+
