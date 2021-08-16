@@ -9,7 +9,7 @@ Homepage: http://github.com/sailfishos/droidmedia
 Vcs-Git: https://gitlab.com/debian-pm/halium/droidmedia.git
 Vcs-Browser: https://gitlab.com/debian-pm/halium/droidmedia
 
-Package: droidmedia
+Package: droidmedia-dev
 Architecture: all
 Multi-Arch: foreign
 Depends: ${misc:Depends}
