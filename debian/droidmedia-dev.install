@@ -1,2 +1,7 @@
+#! /usr/bin/dh-exec
 *.h /usr/include/droidmedia/
 hybris.c /usr/share/droidmedia/
+out/target/product/*/system/lib/libminisf.so /usr/lib/droid-system-overlay/lib/
+out/target/product/*/system/lib/libdroidmedia.so  /usr/lib/droid-system-overlay/lib/
+out/target/product/*/system/bin/minimediaservice /usr/lib/droid-system-overlay/bin/
+out/target/product/*/system/bin/minisfservice /usr/lib/droid-system-overlay/bin/
