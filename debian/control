@@ -9,10 +9,12 @@ Homepage: http://github.com/sailfishos/droidmedia
 Vcs-Git: https://gitlab.com/debian-pm/halium/droidmedia.git
 Vcs-Browser: https://gitlab.com/debian-pm/halium/droidmedia
 
-Package: droidmedia-dev
+Package: libdroidmedia-dev
 Architecture: any
 Multi-Arch: foreign
 Depends: ${misc:Depends}
-Description: Android media wrapper library
- Android media wrapper library
-
+Description: Android media wrapper library - development headers
+ Android media wrapper library.
+ .
+ This package contains development headers for droidmedia. Droidmedia
+ itself must be compiled as a part of the Halium system image.
