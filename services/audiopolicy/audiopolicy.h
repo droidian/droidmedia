@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 Jolla Ltd.
+ * Copyright (C) 2022 Jolla Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,58 +15,30 @@
  *
  */
 
-#ifdef USE_SERVICES_VENDOR_EXTENSION
-
 #if ANDROID_MAJOR == 5 && ANDROID_MINOR == 1
-#include "services_5_1_0_custom.h"
-#else
-#error "No droidmedia vendor extension defined for this Android version."
-#endif
-
-#else
-
-#if ANDROID_MAJOR == 4 && ANDROID_MINOR == 1 && ANDROID_MICRO == 2
-#include "services_4_1_2.h"
-#endif
-
-#if ANDROID_MAJOR == 4 && ANDROID_MINOR == 2 && ANDROID_MICRO == 2
-#include "services_4_2_2.h"
-#endif
-
-#if ANDROID_MAJOR == 4 && ANDROID_MINOR == 4 && ANDROID_MICRO == 4
-#include "services_4_4_4.h"
-#endif
-
-#if ANDROID_MAJOR == 5 && ANDROID_MINOR == 1
-#include "services_5_1_0.h"
+#include "audiopolicy_5_1_0.h"
 #endif
 
 #if ANDROID_MAJOR == 6 && ANDROID_MINOR == 0
-#include "services_6_0_0.h"
+#include "audiopolicy_6_0_0.h"
 #endif
 
 #if ANDROID_MAJOR == 7 && ANDROID_MINOR == 0
-#include "services_7_0_0.h"
-#endif
-
-#if ANDROID_MAJOR == 7 && ANDROID_MINOR == 1
-#include "services_7_1_0.h"
+#include "audiopolicy_7_0_0.h"
 #endif
 
 #if ANDROID_MAJOR == 8 && ANDROID_MINOR == 1
-#include "services_8_1_0.h"
+#include "audiopolicy_8_1_0.h"
 #endif
 
 #if ANDROID_MAJOR == 9
-#include "services_9_0_0.h"
+#include "audiopolicy_9_0_0.h"
 #endif
 
 #if ANDROID_MAJOR == 10
-#include "services_10_0_0.h"
+#include "audiopolicy_10_0_0.h"
 #endif
 
 #if ANDROID_MAJOR == 11
-#include "services_11_0_0.h"
-#endif
-
+#include "audiopolicy_11_0_0.h"
 #endif

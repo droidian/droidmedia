@@ -58,6 +58,7 @@ typedef struct {
   DroidMediaCodecMetaData parent;
 
   DroidMediaData codec_data;
+  int32_t color_format;
 } DroidMediaCodecDecoderMetaData;
 
 typedef struct DroidMediaCodecEncoderH264Settings {
@@ -117,6 +118,8 @@ void droid_media_codec_flush(DroidMediaCodec *codec);
 void droid_media_codec_drain(DroidMediaCodec *codec);
 DroidMediaCodecLoopReturn droid_media_codec_loop(DroidMediaCodec *codec);
 void droid_media_codec_get_output_info(DroidMediaCodec *codec, DroidMediaCodecMetaData *info, DroidMediaRect *crop);
+
+bool droid_media_codec_set_video_encoder_bitrate(DroidMediaCodec *codec, int32_t bitrate);
 
 #ifdef __cplusplus
 };

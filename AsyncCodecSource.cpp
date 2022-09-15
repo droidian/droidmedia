@@ -15,10 +15,15 @@
  * limitations under the License.
  */
 
-#include "AsyncDecodingSource.h"
+//#define LOG_NDEBUG 0
+#include "AsyncCodecSource.h"
 #include <utils/Log.h>
 #include <gui/Surface.h>
+#if ANDROID_MAJOR >= 11
+#include <mediadrm/ICrypto.h>
+#else
 #include <media/ICrypto.h>
+#endif
 #include <media/stagefright/MediaDefs.h>
 #include <media/stagefright/foundation/ALooper.h>
 #include <media/stagefright/foundation/AMessage.h>
@@ -39,28 +44,48 @@ using namespace android;
 typedef ABuffer MediaCodecBuffer;
 #endif
 
-//#define LOG_NDEBUG 0
-#define LOG_TAG "AsyncDecodingSource"
+#define LOG_TAG "AsyncCodecSource"
 
 
 
 //static
-sp<AsyncDecodingSource> AsyncDecodingSource::Create(
-        const sp<MediaSource> &source, uint32_t flags, const sp<ANativeWindow> &nativeWindow,
-        const sp<ALooper> &looper, const char *desiredCodec) {
+sp<MediaSource> AsyncCodecSource::Create(
+        const sp<MediaSource> &source, const sp<AMessage> &srcFormat,
+        bool isEncoder, uint32_t flags, const sp<ANativeWindow> &nativeWindow,
+        const sp<ALooper> &looper, const char *desiredCodec, OMX_COLOR_FORMATTYPE colorFormat) {
     sp<Surface> surface = static_cast<Surface*>(nativeWindow.get());
     const char *mime = nullptr;
     sp<MetaData> meta = source->getFormat();
     CHECK(meta->findCString(kKeyMIMEType, &mime));
 
     sp<AMessage> format = new AMessage;
-    if (convertMetaDataToMessage(meta, &format) != OK) {
+    if (srcFormat.get()) {
+        // The unconfigured MediaSource comes from android::CameraSource.
+        if (isEncoder && !strcmp(mime, "video/raw")) {
+            // Use MediaCodecSource for the camera recorder.
+            return MediaCodecSource::Create(looper, srcFormat, source, nullptr, flags);
+        }
+        format = srcFormat;
+    } else if (convertMetaDataToMessage(meta, &format) != OK) {
+        ALOGE("Cannot convertMetaDataToMessage()");
         return nullptr;
+    }
+
+    if (!isEncoder) {
+#if ANDROID_MAJOR > 6
+        format->setInt32("android._num-input-buffers", 12);
+#else
+        format->setInt32("inputbuffercnt", 12);
+#endif
+    }
+
+    if (colorFormat != OMX_COLOR_FormatUnused) {
+      format->setInt32("color-format", colorFormat);
     }
 
     Vector<AString> matchingCodecs;
     MediaCodecList::findMatchingCodecs(
-            mime, false /* encoder */, flags, &matchingCodecs);
+            mime, isEncoder, flags, &matchingCodecs);
 
     for (const AString &componentName : matchingCodecs) {
         if (desiredCodec != nullptr && componentName.compare(desiredCodec)) {
@@ -68,15 +93,15 @@ sp<AsyncDecodingSource> AsyncDecodingSource::Create(
         }
 
         ALOGV("Attempting to allocate codec '%s'", componentName.c_str());
-        sp<AsyncDecodingSource> res = new AsyncDecodingSource(componentName, source, looper,
+        sp<AsyncCodecSource> res = new AsyncCodecSource(componentName, source, looper,
                         strcmp(mime, MEDIA_MIMETYPE_AUDIO_VORBIS) == 0);
 
         if (res->mCodec != NULL) {
             ALOGI("Successfully allocated codec '%s'", componentName.c_str());
-            if (res->configure(format, surface, 0)) {
+            if (res->configure(format, surface, isEncoder ? MediaCodec::CONFIGURE_FLAG_ENCODE : 0)) {
                 if (surface != nullptr) {
 #if ANDROID_MAJOR > 7
-                    nativeWindowConnect(nativeWindow.get(), "AsyncDecodingSource");
+                    nativeWindowConnect(nativeWindow.get(), "AsyncCodecSource");
 #else
                     native_window_api_connect(nativeWindow.get(),
                                                 NATIVE_WINDOW_API_MEDIA);
@@ -92,11 +117,11 @@ sp<AsyncDecodingSource> AsyncDecodingSource::Create(
         }
     }
 
-    ALOGE("No matching decoder! (mime: %s)", mime);
+    ALOGE("No matching codec! (mime: %s)", mime);
     return nullptr;
 }
 
-AsyncDecodingSource::AsyncDecodingSource(
+AsyncCodecSource::AsyncCodecSource(
         const AString &codecName, const sp<MediaSource> &source, const sp<ALooper> &looper,
         bool isVorbis)
     : mComponentName(codecName),
@@ -111,18 +136,18 @@ AsyncDecodingSource::AsyncDecodingSource(
 
     mCodec = MediaCodec::CreateByComponentName(mCodecLooper, mComponentName);
 
-    mReflector = new AHandlerReflector<AsyncDecodingSource>(this);
+    mReflector = new AHandlerReflector<AsyncCodecSource>(this);
     mLooper->registerHandler(mReflector);
     mNotify = new AMessage(0, mReflector);
 }
 
-AsyncDecodingSource::~AsyncDecodingSource() {
+AsyncCodecSource::~AsyncCodecSource() {
     mCodec->release();
     mCodecLooper->stop();
     mLooper->unregisterHandler(mReflector->id());
 }
 
-bool AsyncDecodingSource::configure(const sp<AMessage> format, const sp<Surface> surface, uint32_t flags) {
+bool AsyncCodecSource::configure(const sp<AMessage> format, const sp<Surface> surface, uint32_t flags) {
     mCodec->setCallback(mNotify);
     status_t err = mCodec->configure(format, surface, nullptr /* crypto */, flags);
     if (err != OK) {
@@ -143,7 +168,7 @@ bool AsyncDecodingSource::configure(const sp<AMessage> format, const sp<Surface>
     return true;
 }
 
-status_t AsyncDecodingSource::start(MetaData *params) {
+status_t AsyncCodecSource::start(MetaData *params) {
     (void)params;
     Mutexed<Output>::Locked me(mOutput);
 
@@ -165,14 +190,15 @@ status_t AsyncDecodingSource::start(MetaData *params) {
     return res;
 }
 
-status_t AsyncDecodingSource::stop() {
+status_t AsyncCodecSource::stop() {
     Mutexed<Output>::Locked me(mOutput);
-    if (mState != STARTED) {
+    if (mState != STARTED && mState != ERROR) {
         return -EINVAL;
     }
 
     // wait for any pending reads to complete
     mState = STOPPING;
+    me->mAvailable.signal();
     while (me->mReading) {
         me.waitForCondition(me->mReadCondition);
     }
@@ -190,17 +216,17 @@ status_t AsyncDecodingSource::stop() {
     return res1 != OK ? res1 : res2;
 }
 
-sp<MetaData> AsyncDecodingSource::getFormat() {
+sp<MetaData> AsyncCodecSource::getFormat() {
     Mutexed<sp<MetaData>>::Locked meta(mMeta);
     return *meta;
 }
 
-AsyncDecodingSource::Output::Output()
+AsyncCodecSource::Output::Output()
     : mReachedEOS(false),
       mReading(false) {
 }
 
-status_t AsyncDecodingSource::read(
+status_t AsyncCodecSource::read(
                     DroidMediaBuffer **buffer,
                     const ReadOptions *options) {
     *buffer = nullptr;
@@ -221,7 +247,8 @@ status_t AsyncDecodingSource::read(
     }
 
     *buffer = nullptr;
-    while (me->mBufferQueue.size() == 0 && !me->mReachedEOS) {
+    while (me->mBufferQueue.size() == 0 && !me->mReachedEOS
+           && mState == STARTED) {
         ALOGV("[%s] Waiting for output.", mComponentName.c_str());
         me.waitForCondition(me->mAvailable);
     }
@@ -237,7 +264,7 @@ status_t AsyncDecodingSource::read(
             res = INFO_FORMAT_CHANGED;
         }
     }
-    else if (me->mReachedEOS) {
+    else if (me->mReachedEOS || mState != STARTED) {
         res = ERROR_END_OF_STREAM;
     }
 
@@ -249,7 +276,7 @@ status_t AsyncDecodingSource::read(
     return res;
 }
 
-void AsyncDecodingSource::onMessageReceived(const sp<AMessage> &msg) {
+void AsyncCodecSource::onMessageReceived(const sp<AMessage> &msg) {
 
     if (mCodec == nullptr) {
         return;
@@ -388,13 +415,21 @@ void AsyncDecodingSource::onMessageReceived(const sp<AMessage> &msg) {
             mCodec->releaseOutputBuffer(index);
             me->mAvailable.signal();
         }
-   } else if (cbID == MediaCodec::CB_ERROR) {
+    } else if (cbID == MediaCodec::CB_ERROR) {
         status_t err;
         CHECK(msg->findInt32("err", &err));
-        ALOGE("Decoder (%s) reported error : 0x%d",
+        ALOGE("Codec (%s) reported error : 0x%d",
                         mComponentName.c_str(), err);
         mState = ERROR;
-   } else {
-       ALOGE("Decoder (%s) unhandled callback id : 0x%d",  mComponentName.c_str(), cbID);
-   }
+    } else {
+        ALOGE("Codec (%s) unhandled callback id : 0x%d",  mComponentName.c_str(), cbID);
+    }
+}
+
+status_t AsyncCodecSource::setParameters(const sp<AMessage> &params)
+{
+    if (mState == STARTED && mCodec.get()) {
+        return mCodec->setParameters(params);
+    }
+    return android::DEAD_OBJECT;
 }

@@ -15,18 +15,20 @@
  * limitations under the License.
  */
 
-#ifndef ASYNC_DECODING_SOURCE_H_
-#define ASYNC_DECODING_SOURCE_H_
+#ifndef ASYNC_CODEC_SOURCE_H_
+#define ASYNC_CODEC_SOURCE_H_
 
+#include <media/openmax/OMX_IVCommon.h>
 #include <media/stagefright/foundation/AString.h>
 #include <media/stagefright/foundation/Mutexed.h>
 #include <media/stagefright/foundation/AHandlerReflector.h>
-#if ANDROID_MAJOR >= 9
+#if ANDROID_MAJOR >= 9 && ANDROID_MAJOR <= 10
 #include <media/MediaSource.h>
 #else
 #include <media/stagefright/MediaSource.h>
 #endif
 #include <media/stagefright/MediaBuffer.h>
+#include <media/stagefright/MediaCodecSource.h>
 #include <utils/Condition.h>
 #include <utils/StrongPointer.h>
 
@@ -46,17 +48,19 @@ struct MediaCodec;
 class MetaData;
 class Surface;
 
-class AsyncDecodingSource : public MediaSource {
+class AsyncCodecSource : public MediaSource {
 public:
-    static sp<AsyncDecodingSource> Create(const sp<MediaSource> &source,
-                    uint32_t flags, const sp<ANativeWindow> &nativeWindow,
-                    const sp<ALooper> &looper, const char *desiredCodec = NULL);
+    static sp<MediaSource> Create(const sp<MediaSource> &source,
+                    const sp<AMessage> &format, bool isEncoder, uint32_t flags,
+                    const sp<ANativeWindow> &nativeWindow, const sp<ALooper> &looper,
+                    const char *desiredCodec = NULL,
+                    OMX_COLOR_FORMATTYPE colorFormat = OMX_COLOR_FormatUnused);
 
     bool configure(const sp<AMessage> format,
                    const sp<Surface> surface,
                    uint32_t flags = 0);
 
-    virtual ~AsyncDecodingSource();
+    virtual ~AsyncCodecSource();
 
     // starts this source (and its underlying source). |params| is ignored.
     virtual status_t start(MetaData *params = NULL);
@@ -78,10 +82,10 @@ public:
     // unsupported methods
     virtual status_t pause() { return INVALID_OPERATION; }
 
-
+    status_t setParameters(const sp<AMessage> &params);
 private:
     // Construct this using a codec, source and looper.
-    AsyncDecodingSource(
+    AsyncCodecSource(
             const AString &codecName, const sp<MediaSource> &source, const sp<ALooper> &looper,
             bool isVorbis);
 
@@ -91,7 +95,7 @@ private:
     sp<ALooper> mLooper;
     sp<ALooper> mCodecLooper;
     sp<AMessage> mNotify = 0;
-    sp<AHandlerReflector<AsyncDecodingSource> > mReflector;
+    sp<AHandlerReflector<AsyncCodecSource> > mReflector;
     List<size_t> mAvailInputIndices;
     Mutexed<sp<MetaData>> mMeta;
     bool mUsingSurface;
