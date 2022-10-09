@@ -129,7 +129,7 @@ public:
     }
     virtual void releaseInput(audio_io_handle_t input,
                               audio_session_t session) {
-        return NO_ERROR;
+        return;
     }
     virtual status_t initStreamVolume(audio_stream_type_t stream,
                                       int indexMin,
@@ -138,7 +138,7 @@ public:
     }
     virtual status_t setStreamVolumeIndex(audio_stream_type_t stream,
                                           int index,
-                                          audio_devices_t device); {
+                                          audio_devices_t device) {
         return NO_ERROR;
     }
     virtual status_t getStreamVolumeIndex(audio_stream_type_t stream,
@@ -297,10 +297,10 @@ public:
     void onAudioPatchListUpdate() { return; }
     void doOnAudioPatchListUpdate() { return; }
     void onDynamicPolicyMixStateUpdate(String8 regId, int32_t state) {
-        return NO_ERROR;
+        return;
     }
     void doOnDynamicPolicyMixStateUpdate(String8 regId, int32_t state) {
-        return NO_ERROR;
+        return;
     }
     void onRecordingConfigurationUpdate(int event, audio_session_t session,
                                         audio_source_t source,
@@ -316,6 +316,51 @@ public:
                                           audio_patch_handle_t patchHandle) {
         return;
     }
+
+#ifdef AUDIOPOLICY_LINEAGE_AUDIOSESSIONINFO
+    status_t listAudioSessions(audio_stream_type_t streams,
+                               Vector< sp<AudioSessionInfo>> &sessions) {
+        return NO_ERROR;
+    }
+#endif
+
+#ifdef AUDIOPOLICY_MTK_AUDIO_ADD
+     virtual status_t SetPolicyManagerParameters(int par1, int par2, int par3,
+                                                 int par4) {
+         return NO_ERROR;
+     }
+     virtual status_t StartOutputSamplerate(audio_io_handle_t output,
+                                  audio_stream_type_t stream,
+                                  audio_session_t session, int samplerate) {
+         return NO_ERROR;
+     }
+     virtual status_t StopOutputSamplerate(audio_io_handle_t output,
+                                         audio_stream_type_t stream,
+                                         audio_session_t session,
+                                         int samplerate) {
+         return NO_ERROR;
+     }
+     virtual status_t SampleRateRequestFocus(audio_io_handle_t output,
+                                  audio_stream_type_t stream,
+                                  int *samplerate) {
+         return NO_ERROR;
+     }
+     virtual status_t SampleRateUnrequestFocus(audio_io_handle_t output,
+                                  audio_stream_type_t stream,
+                                  int samplerate) {
+         return NO_ERROR;
+     }
+
+     virtual status_t doStopOutputSamplerate(audio_io_handle_t output,
+                                       audio_stream_type_t stream,
+                                       audio_session_t session,
+                                       int samplerate) {
+         return NO_ERROR;
+     }
+    virtual status_t getCustomAudioVolume(void* pCustomVol) {
+        return NO_ERROR;
+    }
+#endif
 };
 
 }; // namespace android

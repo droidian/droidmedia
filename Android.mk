@@ -153,8 +153,8 @@ LOCAL_C_INCLUDES += frameworks/av/services/audiopolicy \
                     frameworks/av/services/audiopolicy/service
 endif
 
-# libmedia was split into libmedia and libaudioclient starting with A7
-ifeq ($(shell test $(ANDROID_MAJOR) -ge 7 && echo true),true)
+# libmedia was split into libmedia and libaudioclient starting with A8
+ifeq ($(shell test $(ANDROID_MAJOR) -ge 8 && echo true),true)
 LOCAL_SHARED_LIBRARIES += libaudioclient
 else
 LOCAL_SHARED_LIBRARIES += libmedia
@@ -204,6 +204,12 @@ LOCAL_MODULE_TAGS := optional
 LOCAL_CPPFLAGS=-DANDROID_MAJOR=$(ANDROID_MAJOR) -DANDROID_MINOR=$(ANDROID_MINOR) -DANDROID_MICRO=$(ANDROID_MICRO) -Wno-unused-parameter
 ifeq ($(MINIMEDIA_SENSORSERVER_DISABLE),1)
     LOCAL_CPPFLAGS += -DSENSORSERVER_DISABLE
+endif
+ifeq ($(AUDIOPOLICY_MTK_AUDIO_ADD),1)
+LOCAL_CPPFLAGS += -DAUDIOPOLICY_MTK_AUDIO_ADD
+endif
+ifeq ($(shell grep -q listAudioSessions frameworks/av/services/audiopolicy/service/AudioPolicyService.h && echo true),true)
+LOCAL_CPPFLAGS += -DAUDIOPOLICY_LINEAGE_AUDIOSESSIONINFO
 endif
 LOCAL_MODULE := minimediaservice
 ifeq ($(strip $(DROIDMEDIA_32)), true)
