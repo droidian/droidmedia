@@ -345,6 +345,9 @@ DroidMediaCamera *droid_media_camera_connect(int camera_number)
 #if (ANDROID_MAJOR >= 7)
 					     , android::Camera::USE_CALLING_PID
 #endif
+#if (ANDROID_MAJOR >= 12)
+						 , /*targetSdkVersion*/__ANDROID_API_FUTURE__
+#endif
 					      );
 #endif
 #endif
