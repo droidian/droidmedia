@@ -164,12 +164,16 @@ ifeq ($(ANDROID_MAJOR),$(filter $(ANDROID_MAJOR),8 9))
 LOCAL_SHARED_LIBRARIES += android.hardware.camera.provider@2.4
 endif
 
-ifeq ($(ANDROID_MAJOR),$(filter $(ANDROID_MAJOR),10))
+ifeq ($(ANDROID_MAJOR),$(filter $(ANDROID_MAJOR),10 12))
 LOCAL_SHARED_LIBRARIES += android.hardware.camera.provider@2.5
 endif
 
-ifeq ($(ANDROID_MAJOR),$(filter $(ANDROID_MAJOR),11))
+ifeq ($(ANDROID_MAJOR),$(filter $(ANDROID_MAJOR),11 12))
 LOCAL_SHARED_LIBRARIES += android.hardware.camera.provider@2.6
+endif
+
+ifeq ($(ANDROID_MAJOR),$(filter $(ANDROID_MAJOR),12))
+LOCAL_SHARED_LIBRARIES += android.hardware.camera.provider@2.7
 endif
 
 ifeq ($(shell test $(ANDROID_MAJOR) -ge 10 && echo true),true)
@@ -198,6 +202,13 @@ ifeq ($(shell test $(ANDROID_MAJOR) -ge 11 && echo true),true)
 LOCAL_SHARED_LIBRARIES += libmedia_codeclist \
                           libresourcemanagerservice \
                           libbinder_ndk
+endif
+
+ifeq ($(shell test $(ANDROID_MAJOR) -ge 11 && echo true),true)
+LOCAL_SHARED_LIBRARIES += libactivitymanager_aidl \
+                          libbatterystats_aidl \
+                          libpermission \
+                          libprocessinfoservice_aidl
 endif
 
 LOCAL_MODULE_TAGS := optional
