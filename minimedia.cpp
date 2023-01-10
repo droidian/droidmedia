@@ -64,7 +64,7 @@ main(int, char**)
     FakeActivityManager::instantiate();
 #endif
     MediaPlayerService::instantiate();
-#if ANDROID_MAJOR >= 5
+#if ANDROID_MAJOR >= 5 && ANDROID_MAJOR < 12
     FakeAudioPolicyService::instantiate();
 #endif
 

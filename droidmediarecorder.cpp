@@ -164,8 +164,10 @@ DroidMediaRecorder *droid_media_recorder_create(DroidMediaCamera *camera, DroidM
 #endif
 							    size,  // videoSize
 							    meta->parent.fps, // frameRate
-							    NULL, // surface
-								meta->meta_data // storeMetaDataInVideoBuffers
+							    NULL // surface
+#if ANDROID_MAJOR < 12
+								, meta->meta_data // storeMetaDataInVideoBuffers
+#endif
 							    );
 
   // set metadata storage in codec according to whether the camera request was successful
