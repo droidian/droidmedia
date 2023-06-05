@@ -36,6 +36,13 @@
 
 struct ANativeWindow;
 
+template<typename T>
+struct Buffers {
+    android::List<T>buffers;
+    android::Condition cond;
+    android::Mutex lock;
+};
+
 namespace android {
 
 #if ANDROID_MAJOR < 9
