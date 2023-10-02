@@ -51,9 +51,7 @@ endif
 
 include $(CLEAR_VARS)
 LOCAL_SRC_FILES := droidmedia.cpp \
-                   droidmediacamera.cpp \
                    droidmediaconstants.cpp \
-                   droidmediacodec.cpp \
                    droidmediaconvert.cpp \
                    droidmediarecorder.cpp \
                    allocator.cpp \
@@ -99,7 +97,8 @@ LOCAL_MODULE := libdroidmedia
 
 ifeq ($(shell test $(ANDROID_MAJOR) -ge 7 && echo true),true)
 LOCAL_C_INCLUDES := frameworks/native/include/media/openmax \
-                    frameworks/native/include/media/hardware
+                    frameworks/native/include/media/hardware \
+                    frameworks/av/camera/ndk/include
 ifeq ($(shell test $(ANDROID_MAJOR) -ge 8 && echo true),true)
 LOCAL_C_INCLUDES += frameworks/native/libs/nativewindow/include \
                     frameworks/av/media/libstagefright/omx/include \
@@ -124,7 +123,7 @@ include $(CLEAR_VARS)
 LOCAL_SRC_FILES := minimedia.cpp
 LOCAL_C_INCLUDES := frameworks/av/services/camera/libcameraservice \
                     frameworks/av/media/libmediaplayerservice \
-                    system/media/camera/include
+
 LOCAL_SHARED_LIBRARIES := libcameraservice \
                           libmediaplayerservice \
                           libcamera_client \
