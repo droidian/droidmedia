@@ -38,6 +38,8 @@
 #include <media/stagefright/foundation/AMessage.h>
 #endif
 
+#include "mediabuffers.h"
+
 #if ANDROID_MAJOR < 7
 #include <media/stagefright/OMXCodec.h>
 #else
@@ -85,13 +87,6 @@ struct DroidMediaCodecMetaDataKey {
     {android::MEDIA_MIMETYPE_AUDIO_AAC, android::kKeyESDS, android::kTypeESDS},
     {android::MEDIA_MIMETYPE_VIDEO_AVC, android::kKeyAVCC, android::kTypeAVCC},
     {NULL, 0, 0}
-};
-
-class Buffers {
-public:
-    android::List<android::MediaBuffer *> buffers;
-    android::Condition cond;
-    android::Mutex lock;
 };
 
 class Source : public android::MediaSource {
@@ -267,8 +262,8 @@ private:
     android::sp<android::MetaData> m_metaData;
     bool m_running;
     bool m_draining;
-    Buffers m_framesReceived;
-    Buffers m_framesBeingProcessed;
+    Buffers<android::MediaBuffer*> m_framesReceived;
+    Buffers<android::MediaBuffer*> m_framesBeingProcessed;
 };
 
 class InputBuffer : public android::MediaBuffer {
@@ -479,6 +474,10 @@ public:
 
         if (m_enc->codec_specific.h264.prepend_header_to_sync_frames) {
           format->setInt32("prepend-sps-pps-to-idr-frames", 1);
+        }
+
+        if (m_enc->bitrate_mode != DROID_MEDIA_CODEC_BITRATE_CONTROL_DEFAULT) {
+          format->setInt32("bitrate-mode", m_enc->bitrate_mode);
         }
       }
       //TODO: time-scale
