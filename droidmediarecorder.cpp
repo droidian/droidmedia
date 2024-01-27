@@ -31,6 +31,7 @@
 #undef LOG_TAG
 #define LOG_TAG "DroidMediaRecorder"
 
+#if ANDROID_MAJOR < 12
 namespace android {
 #if ANDROID_MAJOR >= 9
   struct CameraSourceListener {
@@ -43,6 +44,7 @@ namespace android {
     }
   };
 };
+#endif
 
 struct _DroidMediaRecorder {
   _DroidMediaRecorder() :
@@ -165,8 +167,8 @@ DroidMediaRecorder *droid_media_recorder_create(DroidMediaCamera *camera, DroidM
 							    size,  // videoSize
 							    meta->parent.fps, // frameRate
 							    NULL // surface
-#if ANDROID_MAJOR < 12
-								, meta->meta_data // storeMetaDataInVideoBuffers
+#if ANDROID_MAJOR <= 11
+							    , meta->meta_data // storeMetaDataInVideoBuffers
 #endif
 							    );
 
