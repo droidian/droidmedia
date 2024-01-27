@@ -67,6 +67,7 @@ main(int, char**)
 #endif
 #if ANDROID_MAJOR <= 11
     MediaPlayerService::instantiate();
+#endif
 #if ANDROID_MAJOR >= 5 && ANDROID_MAJOR < 12
     FakeAudioPolicyService::instantiate();
 #endif
